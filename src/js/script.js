@@ -33,12 +33,12 @@
     },
   };
 
-  // const classNames = {
-  //   menuProduct: {
-  //     wrapperActive: 'active',
-  //     imageVisible: 'active',
-  //   },
-  // };
+  const classNames = {
+    menuProduct: {
+      wrapperActive: 'active',
+      imageVisible: 'active',
+    },
+  };
 
   // const settings = {
   //   amountWidget: {
@@ -77,6 +77,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
     
     initAccordion(){
@@ -94,6 +95,7 @@
         thisProduct.element.classList.toggle('active');
         /* [DONE] find all active products */
         const activeProducts = document.querySelectorAll(select.all.menuProductsActive);
+        console.log(activeProducts);
         /* [DONE] START LOOP: for each active product */
         for (let activeProduct of activeProducts) {
         /* [DONE] START: if the active product isn't the element of thisProduct */
@@ -143,6 +145,17 @@
           } else if (!optionSelected && option.default){
             price = price - option.price;
           }
+          const productsImages = thisProduct.imageWrapper.querySelectorAll(`.${paramId}-${optionId}`);
+          if  (optionSelected){
+            for (let images of productsImages){
+              images.classList.add(classNames.menuProduct.imageVisible);
+            }
+          } else {
+            for (let images of productsImages){
+              images.classList.remove(classNames.menuProduct.imageVisible);
+            }
+          }
+
         }
       }
       thisProduct.priceElem.innerHTML = price;
