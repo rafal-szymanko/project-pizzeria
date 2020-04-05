@@ -371,6 +371,7 @@
       const thisCart = this;
       thisCart.index = thisCart.products.indexOf(cartProduct);
       thisCart.products.splice(thisCart.index, 1);
+      console.log(cartProduct.dom.wrapper);
       cartProduct.dom.wrapper.remove();
       thisCart.update();     
     }
@@ -404,7 +405,16 @@
           return response.json();
         }).then(function(parsedResponse){
           console.log(parsedResponse);
+          thisCart.clearCart();
+          thisCart.update();
         });
+    }
+
+    clearCart() {
+      const thisCart = this;
+      thisCart.products = [];
+      thisCart.dom.productList.remove();
+      alert('Zamówienie przyjęte do realizacji');
     }
   }
 
@@ -492,11 +502,8 @@
         })
         .then(function(parsedResponse){
           thisApp.data.products = parsedResponse;
-          console.log(parsedResponse);
-          console.log(thisApp.data.products);
           thisApp.initMenu();
         });
-      console.log(JSON.stringify(thisApp.data));
     },
     initCart: function(){
       const thisApp = this;
