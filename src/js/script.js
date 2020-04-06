@@ -91,6 +91,7 @@
     cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
     // CODE ADDED END
   };
+  
 
   class Product {
     constructor(id, data) {
@@ -120,6 +121,8 @@
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
       thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+      thisProduct.amountWidgetInput = thisProduct.element.querySelector('.widget-amount input');
+      console.log(thisProduct.amountWidgetInput);
     }
     
     initAccordion(){
@@ -169,8 +172,8 @@
         event.preventDefault();
         thisProduct.processOrder();
         thisProduct.addToCart();
+        thisProduct.amountWidgetInput.value = settings.amountWidget.defaultValue;
       });
-
     }
     
     processOrder() {
@@ -371,7 +374,6 @@
       const thisCart = this;
       thisCart.index = thisCart.products.indexOf(cartProduct);
       thisCart.products.splice(thisCart.index, 1);
-      console.log(cartProduct.dom.wrapper);
       cartProduct.dom.wrapper.remove();
       thisCart.update();     
     }
@@ -381,58 +383,44 @@
       const url = settings.db.url + '/' + settings.db.order;
 
       if(thisCart.products.length != 0) {
-        if(thisCart.dom.phoneNumber.value.length != 0) {
-          if(thisCart.dom.address.value.length != 0) {
-            const payload = {
-              products : [],
-              address: thisCart.address,
-              phoneNumber: thisCart.phoneNumber,
-              subtotalPrice: thisCart.subtotalPrice,
-              deliveryFee: thisCart.deliveryFee,
-              totalPrice: thisCart.totalPrice,
-            };
-            for (let product of thisCart.products) {
-              payload.products.push(product.getData());
-            }
-            const options = {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload),
-            };
-            fetch(url, options)
-              .then(function(response) {
-                return response.json();
-              }).then(function(parsedResponse){
-                console.log(parsedResponse);
-                thisCart.clearCart();
-                thisCart.update();
-              });
-          } else {
-            thisCart.dom.address.style.borderColor = 'red';
-            thisCart.dom.address.placeholder = 'Uzupełnij adres dostawy';
-          }
-        } else {
-          thisCart.dom.phoneNumber.style.borderColor = 'red';
-          thisCart.dom.phoneNumber.placeholder = 'Uzupełnij numer telefonu';
+        const payload = {
+          products : [],
+          address: thisCart.address,
+          phoneNumber: thisCart.phoneNumber,
+          subtotalPrice: thisCart.subtotalPrice,
+          deliveryFee: thisCart.deliveryFee,
+          totalPrice: thisCart.totalPrice,
+        };
+        for (let product of thisCart.products) {
+          payload.products.push(product.getData());
         }
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        };
+        fetch(url, options)
+          .then(function(response) {
+            return response.json();
+          }).then(function(parsedResponse){
+            thisCart.clearCart(parsedResponse);
+            thisCart.update();
+          });
       } else {
         alert('Twój koszyk jest pusty!');
       }
     }
 
-    clearCart() {
+    clearCart(orderedDish) {
       const thisCart = this;
       thisCart.products = [];
       thisCart.dom.productList.remove();
       thisCart.dom.phoneNumber.value = '';
-      thisCart.dom.phoneNumber.placeholder = 'Your phone';
-      thisCart.dom.phoneNumber.style.borderColor = 'black';
       thisCart.dom.address.value = '';
-      thisCart.dom.address.placeholder = 'Your address';
-      thisCart.dom.address.style.borderColor = 'black';
-      alert('Zamówienie przyjęte do realizacji');
+      thisCart.dom.wrapper.classList.remove(classNames.cart.wrapperActive);
+      alert(`Zamówienie o nr ${orderedDish.id} zostało przyjęte do realizacji`);
     }
   }
 
