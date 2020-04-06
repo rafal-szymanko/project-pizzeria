@@ -380,40 +380,58 @@
       const thisCart = this;
       const url = settings.db.url + '/' + settings.db.order;
 
-      const payload = {
-        products : [],
-        address: thisCart.address,
-        phoneNumber: thisCart.phoneNumber,
-        subtotalPrice: thisCart.subtotalPrice,
-        deliveryFee: thisCart.deliveryFee,
-        totalPrice: thisCart.totalPrice,
-      };
-
-      for (let product of thisCart.products) {
-        payload.products.push(product.getData());
+      if(thisCart.products.length != 0) {
+        if(thisCart.dom.phoneNumber.value.length != 0) {
+          if(thisCart.dom.address.value.length != 0) {
+            const payload = {
+              products : [],
+              address: thisCart.address,
+              phoneNumber: thisCart.phoneNumber,
+              subtotalPrice: thisCart.subtotalPrice,
+              deliveryFee: thisCart.deliveryFee,
+              totalPrice: thisCart.totalPrice,
+            };
+            for (let product of thisCart.products) {
+              payload.products.push(product.getData());
+            }
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+            };
+            fetch(url, options)
+              .then(function(response) {
+                return response.json();
+              }).then(function(parsedResponse){
+                console.log(parsedResponse);
+                thisCart.clearCart();
+                thisCart.update();
+              });
+          } else {
+            thisCart.dom.address.style.borderColor = 'red';
+            thisCart.dom.address.placeholder = 'Uzupełnij adres dostawy';
+          }
+        } else {
+          thisCart.dom.phoneNumber.style.borderColor = 'red';
+          thisCart.dom.phoneNumber.placeholder = 'Uzupełnij numer telefonu';
+        }
+      } else {
+        alert('Twój koszyk jest pusty!');
       }
-
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      };
-      fetch(url, options)
-        .then(function(response) {
-          return response.json();
-        }).then(function(parsedResponse){
-          console.log(parsedResponse);
-          thisCart.clearCart();
-          thisCart.update();
-        });
     }
 
     clearCart() {
       const thisCart = this;
       thisCart.products = [];
       thisCart.dom.productList.remove();
+      thisCart.dom.phoneNumber.value = '';
+      thisCart.dom.phoneNumber.placeholder = 'Your phone';
+      thisCart.dom.phoneNumber.style.borderColor = 'black';
+      thisCart.dom.address.value = '';
+      thisCart.dom.address.placeholder = 'Your address';
+      thisCart.dom.address.style.borderColor = 'black';
       alert('Zamówienie przyjęte do realizacji');
     }
   }
