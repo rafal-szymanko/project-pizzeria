@@ -1,6 +1,7 @@
 import {settings, select, classNames} from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
+import Booking from './components/Booking.js';
 
 const app = {
   initPages: function() {
@@ -28,9 +29,10 @@ const app = {
         window.location.hash = `#/${id}`;
       });
     }
+    
   },
 
-  activatePage(pageID) {
+  activatePage: function(pageID) {
     const thisApp = this;
     for (let page of thisApp.pages){
       page.classList.toggle(
@@ -42,6 +44,11 @@ const app = {
         classNames.pages.active, 
         link.getAttribute('href').slice(1) == pageID);
     } 
+  },
+  initBooking: function() {
+    const thisApp = this;
+    const bookingWidgetWrapper = document.querySelector(select.containerOf.booking);
+    thisApp.bookingWidget = new Booking(bookingWidgetWrapper);
   },
   initMenu: function() {
     const thisApp = this;
@@ -66,8 +73,7 @@ const app = {
     const thisApp = this;
 
     const cartElem = document.querySelector(select.containerOf.cart);
-    thisApp.cart = new Cart(cartElem);
-
+    thisApp.cart = new Cart(cartElem);    
     thisApp.productList = document.querySelector(select.containerOf.menu);
     thisApp.productList.addEventListener('add-to-cart', function(event){
       app.cart.add(event.detail.product);
@@ -78,6 +84,7 @@ const app = {
     thisApp.initPages();
     thisApp.initData();
     thisApp.initCart();
+    thisApp.initBooking();
   },
 };
 app.init();
