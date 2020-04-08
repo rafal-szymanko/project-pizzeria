@@ -31,7 +31,6 @@ class Product {
     thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
     thisProduct.amountWidgetInput = thisProduct.element.querySelector('.widget-amount input');
-    console.log(thisProduct.amountWidgetInput);
   }
     
   initAccordion(){
