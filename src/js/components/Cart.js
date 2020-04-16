@@ -44,6 +44,7 @@ class Cart {
     thisCart.dom.form.addEventListener('submit', function(event) {
       event.preventDefault();
       thisCart.sendOrder();
+      console.log('klik');
     });
     thisCart.dom.phoneNumber.addEventListener('change', function() {
       thisCart.phoneNumber = thisCart.dom.phoneNumber.value;

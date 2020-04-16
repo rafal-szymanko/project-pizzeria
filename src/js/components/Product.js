@@ -147,6 +147,7 @@ class Product {
         product: thisProduct
       }
     });
+    console.log(event);
     thisProduct.element.dispatchEvent(event);
   }
 }

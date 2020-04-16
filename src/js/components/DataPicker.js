@@ -6,7 +6,6 @@ import {select, settings} from '../settings.js';
 
 class DataPicker extends BaseWidget {
   constructor(wrapper) {
-
     super(wrapper, utils.dateToStr(new Date()));
     const thisWidget = this;
     thisWidget.dom = {};
@@ -16,8 +15,8 @@ class DataPicker extends BaseWidget {
   }
   initPlugin(){
     const thisWidget = this;
-    thisWidget.minDate = utils.dateToStr(new Date(thisWidget.value));
-    thisWidget.maxDate = utils.dateToStr(utils.addDays(new Date(), settings.datePicker.maxDaysInFuture));
+    thisWidget.minDate = new Date(thisWidget.value);
+    thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
 
     thisWidget.options = {
       defaultDate: thisWidget.minDate,
@@ -33,10 +32,12 @@ class DataPicker extends BaseWidget {
         'firstDayOfWeek': 1 // start week on Monday
       }
     };
+
     flatpickr(thisWidget.dom.input, thisWidget.options).config.onChange.push(function(selectedDates, dateStr){
       // console.log(selectedDates);
       thisWidget.value = dateStr;
     });
+
   }
   parseValue(value) {
     return value;
