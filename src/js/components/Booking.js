@@ -50,9 +50,6 @@ class Booking {
     thisBooking.datePicker = new DataPicker(thisBooking.dom.datePicker);
     thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
 
-    console.log(thisBooking.hourPicker.correctValue);
-    console.log(thisBooking.hourPicker.value);
-    console.log(thisBooking.hourPicker);
     thisBooking.container.addEventListener('updated', function(){
       thisBooking.updateDOM();
     });
@@ -102,9 +99,7 @@ class Booking {
       })
       .then(function([bookings, eventsCurrent, eventsRepeatResponse]){
         thisBooking.parseData(bookings, eventsCurrent, eventsRepeatResponse);
-        // console.log(bookings);
-        // console.log(eventsCurrent);
-        // console.log(eventsRepeatResponse);
+        thisBooking.currentlyBookings = bookings;
       });
   }
   parseData(bookings, eventsCurrent, eventsRepeat) {
@@ -197,18 +192,25 @@ class Booking {
     thisBooking.hourPicker.dom.input.addEventListener('change', function(){
       for(let table of thisBooking.dom.tables) {
         table.classList.remove('activeTable');
+        thisBooking.tableId = undefined;
       }
     });
 
     thisBooking.datePicker.dom.input.addEventListener('change', function(){
       for(let table of thisBooking.dom.tables) {
         table.classList.remove('activeTable');
+        thisBooking.tableId = undefined;
       }
     });
 
 
     for(let table of thisBooking.dom.tables) {
       table.addEventListener('click', function(event){
+
+        if(table.classList.contains('booked')){
+          alert('Stolik jest zarezerwowany');
+          return;
+        }
 
         for(let table of thisBooking.dom.tables) {
           table.classList.remove('activeTable');
@@ -256,8 +258,6 @@ class Booking {
       phoneNumber: thisBooking.phone,
 
     };   
-    console.log(payload);
-    
 
     const options = {
       method: 'POST',
@@ -266,13 +266,35 @@ class Booking {
       },
       body: JSON.stringify(payload),
     };
-    fetch(url, options)
-      .then(function(response) {
-        return response.json();
-      }).then(function(parsedResponse){
-        console.log(parsedResponse);
-        thisBooking.getData();
-      });
+
+    
+
+    for (let currentlyBooking of thisBooking.currentlyBookings) {
+
+      console.log(currentlyBooking.date);
+      console.log(payload.date);
+      if (currentlyBooking.date == payload.date 
+        && currentlyBooking.hour == payload.hour
+        && currentlyBooking.table == payload.table){
+        return alert(`Błąd rezerwacji. Rezerwacja stolika ${payload.table} na dzień ${payload.date} na godzinę ${currentlyBooking.hour} znajduje się już w systemie.`);
+      }
+    }
+
+
+    if(payload.table !== undefined){
+      
+      fetch(url, options)
+        .then(function(response) {
+          return response.json();
+        }).then(function(parsedResponse){
+          console.log(parsedResponse);
+          thisBooking.getData();
+          alert(`Pomyślnie zarezerwowano stolik nr ${parsedResponse.table}, na dzień ${parsedResponse.date} na godzinę ${parsedResponse.hour}`);
+        }); 
+    } else {
+      alert('Nie został wybrany żaden z dostępnych stolików');
+    }
+
   }
 }
 
