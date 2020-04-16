@@ -130,6 +130,10 @@
     border: 1px solid $color-dark;
     border-width: 0 6px 0 6px;
   }
+
+  .activeTable {
+    background:greenyellow;
+  }
   
   .bar {
     left: 0;
@@ -146,8 +150,9 @@
     line-height: 70px;
     transform: rotate(45deg);
     transform-origin: 50% 50%;
+
     cursor: pointer;
-  
+
     &--round {
       border-radius: 50%;
   
