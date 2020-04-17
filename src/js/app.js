@@ -7,7 +7,10 @@ const app = {
   initPages: function() {
     const thisApp = this;
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
-    thisApp.navLinks = document.querySelectorAll(select.nav.links);
+    const navLinks = document.querySelectorAll(select.nav.links);
+    const mainPageNav = document.querySelectorAll(select.nav.mainPageNav);
+
+    thisApp.navLinks =[...navLinks,...mainPageNav];
 
     const idFromHash = window.location.hash.slice(2);
 
