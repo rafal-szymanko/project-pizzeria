@@ -6,6 +6,12 @@
   border-radius: $radius;
 }
 
+* {
+  padding: 0;
+  margin: 0;
+}
+// Navigation
+
 .main-page-nav {
   ul {
     display: flex;
@@ -26,15 +32,39 @@
         top: -50%;
       }
 
-      h3 {
+      h3,
+      p {
         position: absolute;
+        color: $color-light;
+        transition: .5s;
+      }
+
+      h3 {
         top: 50%;
         left: 50%;
-        padding: 0;
-        margin: 0;
         transform: translate(-50%, -50%);
-        color: $color-light;
         text-transform: uppercase;
+      }
+
+      p {
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 100%);
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    .order-online-button,
+    .book-table-button {
+      &:hover {
+        h3 {
+          transform: translate(-50%, -80%);
+        }
+
+        p {
+          transform: translate(-50%, -80%);
+        }
       }
     }
   }
@@ -47,15 +77,123 @@
   border-radius: 5px;
   text-transform: uppercase;
   position: relative;
+  margin-bottom: 100px;
 
   div {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
 
-    * {
-      margin: 0;
+// Carousel
+
+.carousel-cell {
+  width: 100%;
+  /* full width */
+  height: 200px;
+  /* height of carousel */
+  margin-right: 10px;
+  display: flex;
+  justify-content: space-between;
+
+  .carousel-opinion-wrapper {
+    margin: auto;
+
+    h3,
+    p {
+      padding-top: 10px;
     }
+  }
+
+  .carousel-image-wrapper {
+    min-width: 250px;
+
+    img {
+      width: 200px;
+      height: 200px;
+      // object-fit: cover;
+    }
+  }
+}
+
+.flickity-button {
+  display: none;
+}
+
+// Gallery 
+
+.gallery-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 100px;
+  min-height: 280px;
+
+  div {
+    flex: 0 0 32%;
+    position: relative;
+    height: 130px;
+
+    &:hover {
+      .gallery-links-wrapper {
+        display: block;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0.5;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      object-fit: cover;
+    }
+
+    .gallery-links-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: none;
+
+      a {
+        color: $color-light;
+        font-size: 30px;
+        position: absolute;
+        display: block;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        &:hover {
+          color: $color-main;
+        }
+      }
+
+      :nth-child(1) {
+        left: 30%;
+      }
+
+      :nth-child(2) {
+        left: 70%;
+      }
+    }
+  }
+}
+
+.link {
+  a {
+    color: $color-main;
   }
 }

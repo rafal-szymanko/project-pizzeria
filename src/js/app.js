@@ -21,8 +21,17 @@ const app = {
         break;
       }
     }
-
+    // 
     thisApp.activatePage(pageMatchingHash);
+
+    const cart = document.getElementById('cart');
+    const mainNavWrapper = document.querySelector('.main-nav');
+
+    if(pageMatchingHash == 'main-page'){
+      cart.style.display = 'none';
+      mainNavWrapper.style.display = 'none';
+      
+    }
 
     for(let link of thisApp.navLinks) {
       link.addEventListener('click', function(event){
@@ -30,9 +39,19 @@ const app = {
         const id = link.getAttribute('href').slice(1);
         thisApp.activatePage(id);
         window.location.hash = `#/${id}`;
+        cart.style.display = 'block';
+        mainNavWrapper.style.display = 'flex';
       });
     }
     
+    const elem = document.querySelector('.main-carousel');
+    console.log(elem);
+
+    // eslint-disable-next-line no-undef
+    new Flickity( elem, {
+      autoPlay: true
+    });
+
   },
 
   activatePage: function(pageID) {
