@@ -19,7 +19,6 @@ class Booking {
     thisBooking.container = container;
     thisBooking.dom = {};
     thisBooking.dom.wrapper = templates.bookingWidget();
-
     thisBooking.element = utils.createDOMFromHTML(thisBooking.dom.wrapper);
     thisBooking.container.appendChild(thisBooking.element);
   }
@@ -53,6 +52,8 @@ class Booking {
     thisBooking.container.addEventListener('updated', function(){
       thisBooking.updateDOM();
     });
+
+
   }
 
   getData() {
@@ -126,11 +127,13 @@ class Booking {
       }
     }
 
+
     thisBooking.updateDOM();
   }
 
   makeBooked(date, hour, duration, table) {
     const thisBooking = this;
+
 
     if(typeof thisBooking.booked[date] == 'undefined') {
       thisBooking.booked[date] = {};
@@ -142,9 +145,11 @@ class Booking {
       if(typeof thisBooking.booked[date][hourBlock] == 'undefined') {
         thisBooking.booked[date][hourBlock] = [];
       }
-      thisBooking.booked[date][hourBlock].push(table);
-    }
 
+      thisBooking.booked[date][hourBlock].push(table);
+      
+    }
+    
   }
 
   updateDOM() {
@@ -169,9 +174,54 @@ class Booking {
       } else {
         table.classList.remove(classNames.booking.tableBooked);
       }
-
     }
-    
+
+
+    const booked = thisBooking.booked[thisBooking.date];
+    thisBooking.dom.rangeSlider = thisBooking.element.querySelector('.rangeSlider');
+    const slice = 100/12;
+    let gradientGreen = [];
+    let gradientOrange = [];
+    let gradientRed = [];
+
+    for (let i = 0; i<= 12; i += 0.5) {
+      const start = slice * i;
+      const end = slice *(i + 0.5);
+
+      
+      const green = `green`;
+      const red = `red`;
+      const orange = `orange`;
+
+      if(typeof booked[i+12] == 'undefined') {
+        booked[i+12] = [];   
+      }
+      
+      if (booked[i+12].length == 1 || booked[i+12].length == 0){
+        const  gradient = [`${green} ${start}% , ${green} ${end}% `];
+        gradientGreen = [...gradientGreen, ...gradient];
+      }
+
+      if (booked[i+12].length == 2) {
+        const  gradient = [`${orange} ${start}% , ${orange} ${end}% `];
+        gradientOrange = [...gradientOrange, ...gradient];
+      }
+
+      if (booked[i+12].length == 3) {
+        const  gradient = [`${red} ${start}% , ${red} ${end}% `];
+        gradientRed = [...gradientRed, ...gradient];
+      }
+    }
+
+    let inputGradientArray = [...gradientRed, ...gradientGreen, ...gradientOrange];
+    let inputGradientSort = inputGradientArray.sort(function(a,b) {
+      return (Number(a.match(/(\d+)/g)[0]) - Number((b.match(/(\d+)/g)[0])));
+    });
+
+    const inputGradientColor = inputGradientSort.toString();
+
+    thisBooking.dom.rangeSlider.style.background =
+     `linear-gradient(90deg, ${inputGradientColor})`;
   }
 
   initAction() {
@@ -269,17 +319,14 @@ class Booking {
 
     
 
-    for (let currentlyBooking of thisBooking.currentlyBookings) {
+    for (let currentlyBooking in thisBooking.currentlyBookings) {
 
-      console.log(currentlyBooking.date);
-      console.log(payload.date);
       if (currentlyBooking.date == payload.date 
         && currentlyBooking.hour == payload.hour
         && currentlyBooking.table == payload.table){
         return alert(`Błąd rezerwacji. Rezerwacja stolika ${payload.table} na dzień ${payload.date} na godzinę ${currentlyBooking.hour} znajduje się już w systemie.`);
       }
     }
-
 
     if(payload.table !== undefined){
       
@@ -297,7 +344,5 @@ class Booking {
 
   }
 }
-
-
 
 export default Booking;

@@ -80,7 +80,7 @@ class Product {
       event.preventDefault();
       thisProduct.processOrder();
       thisProduct.addToCart();
-      thisProduct.amountWidgetInput.value = settings.amountWidget.defaultValue;
+      thisProduct.amountWidget.value = settings.amountWidget.defaultValue;
     });
   }
     
@@ -140,14 +140,12 @@ class Product {
     const thisProduct = this;
     thisProduct.name = thisProduct.data.name;
     thisProduct.amount = thisProduct.amountWidget.value;
-    // app.cart.add(thisProduct);
     const event = new CustomEvent('add-to-cart', {
       bubbles: true,
       detail: {
         product: thisProduct
       }
     });
-    console.log(event);
     thisProduct.element.dispatchEvent(event);
   }
 }

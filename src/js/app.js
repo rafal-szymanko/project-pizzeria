@@ -45,8 +45,7 @@ const app = {
     }
     
     const elem = document.querySelector('.main-carousel');
-    console.log(elem);
-
+    
     // eslint-disable-next-line no-undef
     new Flickity( elem, {
       autoPlay: true
