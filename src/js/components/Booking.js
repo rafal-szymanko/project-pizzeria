@@ -188,26 +188,20 @@ class Booking {
       const start = slice * i;
       const end = slice *(i + 0.5);
 
-      
+      console.log(booked);
       const green = `green`;
       const red = `red`;
       const orange = `orange`;
 
       if(typeof booked[i+12] == 'undefined') {
         booked[i+12] = [];   
-      }
-      
-      if (booked[i+12].length == 1 || booked[i+12].length == 0){
+      } else if (booked[i+12].length == 1 || booked[i+12].length == 0){
         const  gradient = [`${green} ${start}% , ${green} ${end}% `];
         gradientGreen = [...gradientGreen, ...gradient];
-      }
-
-      if (booked[i+12].length == 2) {
+      } else if (booked[i+12].length == 2) {
         const  gradient = [`${orange} ${start}% , ${orange} ${end}% `];
         gradientOrange = [...gradientOrange, ...gradient];
-      }
-
-      if (booked[i+12].length == 3) {
+      } else if (booked[i+12].length == 3) {
         const  gradient = [`${red} ${start}% , ${red} ${end}% `];
         gradientRed = [...gradientRed, ...gradient];
       }
@@ -222,6 +216,8 @@ class Booking {
 
     thisBooking.dom.rangeSlider.style.background =
      `linear-gradient(90deg, ${inputGradientColor})`;
+
+    console.log(booked);
   }
 
   initAction() {
